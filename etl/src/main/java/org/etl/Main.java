@@ -11,10 +11,8 @@ public class Main {
     public static void main(String[] args) throws StreamingQueryException {
 
         Setup setup = new Setup();
-        SparkSession spark = SparkSession.builder()
-                .appName("Spark Java Test")
-                .master("local")
-                .getOrCreate();
+        SparkSession spark = setup.SetupSpark();
+
         String url = setup.ReturnUrl();
         Properties props = setup.ReturnProperties();
 

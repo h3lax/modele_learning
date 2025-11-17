@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class Setup {
 
-    public SparkSession ReturnSpark() {
+    public SparkSession SetupSpark() {
         SparkSession spark = SparkSession.builder()
                 .appName("Spark Java Test")
                 .master("local[*]")
