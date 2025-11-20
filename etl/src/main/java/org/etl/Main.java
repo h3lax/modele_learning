@@ -1,27 +1,33 @@
 package org.etl;
 
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.streaming.StreamingQueryException;
-import java.util.Properties;
+import org.etl.Extract.Extract;
+import org.etl.Extract.FormatType;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 public class Main {
 
     public static void main(String[] args) throws StreamingQueryException {
 
-        Setup setup = new Setup();
-        SparkSession spark = setup.SetupSpark();
+        Path address = Paths.get("./data/openfoodfacts-mongodbdump");
+        FormatType type = FormatType.MONGO;
+        Dataset<Row> df ;
 
-        String url = setup.ReturnUrl();
-        Properties props = setup.ReturnProperties();
+        try {
+            df = Extract.extract(address, type);
+            System.out.println("Data received from Mongo");
+            df.show();
+            System.out.println("Trying to display the data");
+            df.describe();
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        Dataset<Row> df = spark.read()
-                .jdbc(url, "(SELECT id, name, address, car_name FROM fake) AS t", props);
-
-        df.show();
-        df.describe();
-        df.select("name", "address").show();
     }
 }
 
